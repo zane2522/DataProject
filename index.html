@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>WiFi Hot-spot locations in NYC</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4rBWLjCb2UqXieMcTnOJgSAr9e4xn_Wo"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 450px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: lightgray;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: lightgrey;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;}
+ 
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">WiFi Hot-spots</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+     
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"></span> Alex & Zane</a></li>
+      </ul>
+     
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+
+   
+     
+
+      <h1>WiFi Hot-spots in NYC</h1>
+      <p>Being teenagers, wifi is very important to us.<br> So it is important to know where to get wifi when in need.<br> Don't know where they are? <br> Don't worry search right here</p>
+
+
+      <!--<div class="col-sm-2 sidenav">-->
+      <!--<div class="well">-->
+       <!--<body background="wifi.jpg">-->
+      <!--</div>-->
+     <!--</div>-->
+
+
+
+
+
+      
+<script type="text/template" id="wifiTemplate">
+    <!-- This section is to define the HTML template-->
+    <div class='panel panel-default'>
+        <div class='panel-heading'>{{boroname}}</div>
+        <div class='panel-body'>
+            <p>{{provider}}</p>
+            <p>{{location_t}}</p>
+            <p>{{ssid}}</p>
+            <p>{{type}}</p>
+            
+        </div>        
+        <div class='panel-footer'>
+            <marquee>{{location}}</marquee>
+            <button onclick="GoogMap( {{latitude}}, {{longitude}} )">Map</button>   
+        </div>
+    </div>
+</script>
+
+<script>
+ 
+function loadJSON(){        
+    $.getJSON("https://data.cityofnewyork.us/resource/24t3-xqyv.json", function(result){        
+        displayWifiInfo(result);
+    }); 
+}
+function displayWifiInfo(data){
+    var build = "";
+    var output = document.getElementById("op");
+    var boroname = document.getElementById("boroname").value;
+    var template = document.getElementById("wifiTemplate").innerHTML;
+    
+    for(i=0; i<data.length; i++){        
+        if (data[i].city.toLowerCase().indexOf( boroname.toLowerCase() ) != -1){
+            build += Mustache.render(template, data[i]);
+        }
+    }
+    output.innerHTML = build;    
+}
+
+function GoogMap(Lat, Lon){
+    var gMap = document.getElementById("googleMap");
+    var mapProp= {
+            center:new google.maps.LatLng(Lat, Lon),
+            zoom:18,
+        };
+    var map=new google.maps.Map(gMap,mapProp);
+}
+</script>
+</head>
+<!--<body background="wifi.jpg">-->
+<body id="myPage">
+   <div class="container">
+        <div class="jumbotron">
+            
+            <h2>Search by Borough below.</h2> <br>
+           
+            <p> <input type="text" id="boroname" placeholder="Enter Borough"></p>
+            <button onclick="loadJSON()" type="button" class="btn btn-success">Search</button>           
+        </div> 
+        <div id="googleMap"></div>
+        <div id="op"></div>
+    </div>
+</body>
+      
+    </div>
+    <div class="col-sm-2 sidenav">
+      <div class="well">
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<style>
+    #myPage .panel{
+        /* by giving the body an id, you avoid having to use "!important"
+         to override CSS rules */
+        width:300px;        
+        padding:10px;       margin:10px;
+        border-radius:10px; box-shadow:green 5px 5px 5px;
+        display:inline-block;       
+    }
+    #myPage .panel-heading{
+        background-color: white;  font-size:14pt;
+        padding:10px;       font-family:"Arial";
+        text-shadow:gray 2px 2px 2px;
+    
+    }
+    #myPage .panel-body{
+        background-color: lightgray;
+        padding:10px;       font-family:"Arial";        
+    }
+    #myPage .panel-footer{
+        background-color:lightegrey;
+        padding:10px;       font-family:"Arial";        
+    }
+    p,a{
+        font-size:14pt;
+        font-family:"Arial";
+    }
+    button{
+        font-weight:bold;   text-decoration:none;
+        color: white;      border-radius:10px;            
+        padding:5px;        box-shadow:black 5px 5px 5px;      
+        cursor: pointer;    background-color:blue;
+    }
+    #googleMap{
+        height:500px;   width: 450px;
+        float:right;  box-shadow:green 5px 5px 5px; 
+    }
+    .jumbotron{
+        text-align: center; 
+        background-color:lightgray;
+        
+        
+    }
+</style>
+
+
+</body>
+</html>
